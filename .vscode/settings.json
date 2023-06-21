@@ -1,0 +1,9 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "none",
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestArgs": ["-v", "-s", "./algorithms/python", "-p", "tests.py"],
+    "python.testing.unittestEnabled": true
+}
