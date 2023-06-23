@@ -1,6 +1,4 @@
-"""
-This module implements an Aho-Corasick automaton for multi-pattern string matching in Chinese.
-"""
+"""This module implements an Aho-Corasick automaton for multi-pattern string matching in Chinese."""
 
 import logging
 from dataclasses import dataclass, field
@@ -21,9 +19,7 @@ BYTE_SIZE = 256
 
 @dataclass
 class ACNode:
-    """
-    A node in the Aho-Corasick automaton.
-    """
+    """A node in the Aho-Corasick automaton."""
 
     # The pattern that ends at this node, if any
     patterns: list[Pattern] = field(default_factory=list)
@@ -44,16 +40,12 @@ class ACNode:
 
 
 class AC(BaseAlgo):
-    """
-    An Aho-Corasick automaton.
-    """
+    """An Aho-Corasick automaton."""
 
     NAME = "AC"
 
     def __init__(self, patterns: list[Pattern]) -> None:
-        """
-        Initialise the automaton with a list of patterns.
-        """
+        """Initialise the automaton with a list of patterns."""
         super().__init__(patterns)
 
         self.root = ACNode()
@@ -66,9 +58,7 @@ class AC(BaseAlgo):
         self.calculate_fail()
 
     def insert(self, pattern: Pattern) -> None:
-        """
-        Insert a key into the trie.
-        """
+        """Insert a key into the trie."""
 
         logging.debug("Inserting pattern: %s", pattern)
 
@@ -101,9 +91,7 @@ class AC(BaseAlgo):
         logging.debug("Finished insertion at node: %s", last_node)
 
     def calculate_fail(self) -> None:
-        """
-        Calculate the fail pointers using BFS.
-        """
+        """Calculate the fail pointers using BFS."""
 
         logging.debug("Calculating fail pointers")
 
@@ -170,9 +158,7 @@ class AC(BaseAlgo):
         self.fail[0] = 0
 
     def dump(self) -> None:
-        """
-        Dump the nodes and fail pointers of the automaton.
-        """
+        """Dump the nodes and fail pointers of the automaton."""
 
         logging.debug("Dumping automaton")
 
@@ -180,9 +166,7 @@ class AC(BaseAlgo):
             logging.debug("Node %d: %s, fail: %d", idx, node, self.fail[idx])
 
     def match(self, text: TargetText) -> MatchResult:
-        """
-        Match the text with the patterns.
-        """
+        """Match the text with the patterns."""
         check = super().match(text)
         if len(check) > 0:
             return MatchResult()

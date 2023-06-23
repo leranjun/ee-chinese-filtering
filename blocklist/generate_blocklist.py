@@ -1,6 +1,4 @@
-"""
-This script generates the blocklist files from the raw text files.
-"""
+"""This script generates the blocklist files from the raw text files."""
 
 import glob
 import random

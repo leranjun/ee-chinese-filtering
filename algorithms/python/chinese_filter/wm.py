@@ -1,6 +1,4 @@
-"""
-This module implements the Wu-Manber algorithm for multi-pattern string matching in Chinese.
-"""
+"""This module implements the Wu-Manber algorithm for multi-pattern string matching in Chinese."""
 
 import logging
 
@@ -16,16 +14,12 @@ Block = bytes
 
 
 class WM(BaseAlgo):
-    """
-    The Wu-Manber algorithm.
-    """
+    """The Wu-Manber algorithm."""
 
     NAME = "WM"
 
     def __init__(self, patterns: list[Pattern], block_size: int = 2) -> None:
-        """
-        Initialise the algorithm with a list of patterns.
-        """
+        """Initialise the algorithm with a list of patterns."""
         super().__init__(patterns)
 
         # The size of each block (B in the paper)
@@ -48,9 +42,7 @@ class WM(BaseAlgo):
             self.insert(pattern)
 
     def insert(self, pattern: Pattern) -> None:
-        """
-        Insert a pattern into the instance.
-        """
+        """Insert a pattern into the instance."""
 
         logging.debug("Inserting pattern: %s", pattern)
 
@@ -98,9 +90,7 @@ class WM(BaseAlgo):
         self.prefix.setdefault(prefix_key, set()).add(pattern)
 
     def dump(self) -> None:
-        """
-        Dump the internal data structures.
-        """
+        """Dump the internal data structures."""
 
         logging.debug("Dumping WM instance")
 
@@ -109,9 +99,7 @@ class WM(BaseAlgo):
         logging.debug("Prefix table: %s", self.prefix)
 
     def match(self, text: TargetText) -> MatchResult:
-        """
-        Match the patterns in the text.
-        """
+        """Match the patterns in the text."""
 
         check = super().match(text)
         if len(check) > 0:
