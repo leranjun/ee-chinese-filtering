@@ -35,7 +35,8 @@ class BaseAlgo:
         Dump the internal state of the algorithm.
         """
 
-    def match(self, text: TargetText) -> MatchResult:
+    @staticmethod
+    def match(text: TargetText) -> MatchResult:
         """
         Match a string against the blocklist.
         """
