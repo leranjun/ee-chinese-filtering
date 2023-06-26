@@ -10,7 +10,6 @@ class Native(BaseAlgo):
 
     def __init__(self, patterns: list[Pattern]):
         """Create a new instance of the native algorithm."""
-
         self.patterns = patterns
 
     def match(self, text: TargetText) -> MatchResult:

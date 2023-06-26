@@ -79,7 +79,6 @@ def test_algo(
     match_with_instance: Callable[[BaseAlgo, TargetText], tuple[MatchResult, Time]],
 ) -> RunResult:
     """Test a given algorithm with a given blocklist and tests."""
-
     logging.info("Testing blocklist of size %s", blocklist_info[0])
 
     logging.info("Creating %s instance", algo.NAME)
@@ -106,7 +105,6 @@ def test_algo(
 
 def run_tests() -> None:
     """Main function for running the tests."""
-
     tests = TestsInfo()
     for test_name in TEST_NAMES:
         with open(f"{BASE_PATH}tests/{test_name}.txt", encoding="utf-8") as file:

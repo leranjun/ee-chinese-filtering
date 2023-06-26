@@ -59,7 +59,6 @@ class AC(BaseAlgo):
 
     def insert(self, pattern: Pattern) -> None:
         """Insert a key into the trie."""
-
         logging.debug("Inserting pattern: %s", pattern)
 
         cur_idx: NodeIndex = 0
@@ -92,7 +91,6 @@ class AC(BaseAlgo):
 
     def calculate_fail(self) -> None:
         """Calculate the fail pointers using BFS."""
-
         logging.debug("Calculating fail pointers")
 
         # Initialise the fail pointers to -1
@@ -159,7 +157,6 @@ class AC(BaseAlgo):
 
     def dump(self) -> None:
         """Dump the nodes and fail pointers of the automaton."""
-
         logging.debug("Dumping automaton")
 
         for idx, node in enumerate(self.nodes):

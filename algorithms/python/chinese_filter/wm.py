@@ -43,7 +43,6 @@ class WM(BaseAlgo):
 
     def insert(self, pattern: Pattern) -> None:
         """Insert a pattern into the instance."""
-
         logging.debug("Inserting pattern: %s", pattern)
 
         # Encode the pattern to bytes
@@ -91,7 +90,6 @@ class WM(BaseAlgo):
 
     def dump(self) -> None:
         """Dump the internal data structures."""
-
         logging.debug("Dumping WM instance")
 
         logging.debug("Shift table: %s", self.shift)
@@ -100,7 +98,6 @@ class WM(BaseAlgo):
 
     def match(self, text: TargetText) -> MatchResult:
         """Match the patterns in the text."""
-
         check = super().match(text)
         if len(check) > 0:
             return MatchResult()
