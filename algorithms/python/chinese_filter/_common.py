@@ -28,7 +28,6 @@ class BaseAlgo:
     @staticmethod
     def match(text: TargetText) -> MatchResult:
         """Match a string against the blocklist."""
-
         logging.debug("Matching text: %s", text)
 
         if not isinstance(text, TargetText):
