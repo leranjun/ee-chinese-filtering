@@ -1,6 +1,4 @@
-"""
-This module tests the AC module.
-"""
+"""This module tests the AC module."""
 
 import json
 import logging
@@ -24,9 +22,7 @@ CONFIG = {
 
 @dataclass
 class TestCase:
-    """
-    Dataclass for storing a test case.
-    """
+    """Dataclass for storing a test case."""
 
     blocklist: list[Pattern]
     testcase: TargetText
@@ -56,17 +52,13 @@ for test_name in CONFIG["TEST_NAMES"]:
 
 
 class TestAlgos(unittest.TestCase):
-    """
-    Test the algorithms.
-    """
+    """Test the algorithms."""
 
     def _run_test(
         self,
         algo: type[BaseAlgo],
     ) -> None:
-        """
-        Run a test case for a given instance of an algorithm and a given language.
-        """
+        """Run a test case for a given instance of an algorithm and a given language."""
         for name, content in TESTS.items():
             if name != "0_zh" and name != "2_medium":
                 continue
@@ -77,27 +69,19 @@ class TestAlgos(unittest.TestCase):
             del instance
 
     def test_brute_force(self) -> None:
-        """
-        Test the brute force algorithm.
-        """
+        """Test the brute force algorithm."""
         self._run_test(BruteForce)
 
     def test_native(self) -> None:
-        """
-        Test the native algorithm.
-        """
+        """Test the native algorithm."""
         self._run_test(Native)
 
     def test_ac(self) -> None:
-        """
-        Test the AC algorithm.
-        """
+        """Test the AC algorithm."""
         self._run_test(AC)
 
     def test_wm(self) -> None:
-        """
-        Test the WM algorithm.
-        """
+        """Test the WM algorithm."""
         self._run_test(WM)
 
 

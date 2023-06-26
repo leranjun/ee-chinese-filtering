@@ -1,27 +1,19 @@
-"""
-Naive algorithm for matching multiple strings by brute force.
-"""
+"""Naive algorithm for matching multiple strings by brute force."""
 
 from chinese_filter._common import BaseAlgo, MatchResult, Pattern, TargetText
 
 
 class BruteForce(BaseAlgo):
-    """
-    Naive algorithm for matching multiple strings by brute force.
-    """
+    """Naive algorithm for matching multiple strings by brute force."""
 
     NAME = "BruteForce"
 
     def __init__(self, patterns: list[Pattern]):
-        """
-        Create a new instance of the brute force algorithm.
-        """
+        """Create a new instance of the brute force algorithm."""
         self.patterns = patterns
 
     def match(self, text: TargetText) -> MatchResult:
-        """
-        Match a string against the blocklist.
-        """
+        """Match a string against the blocklist."""
         check = super().match(text)
         if len(check) > 0:
             return MatchResult()
