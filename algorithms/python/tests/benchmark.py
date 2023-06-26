@@ -1,6 +1,4 @@
-"""
-Benchmarking script for the algorithms.
-"""
+"""Benchmarking script for the algorithms."""
 
 import json
 import logging
@@ -29,9 +27,7 @@ TestResults = list[tuple[Name, MatchResult, Time]]
 
 @dataclass
 class RunResult:
-    """
-    Dataclass for storing the results of a test.
-    """
+    """Dataclass for storing the results of a test."""
 
     instance_name: Name
     blocklist_size: Name
@@ -58,9 +54,7 @@ class RunResult:
 def _create_instance(
     algo: type[BaseAlgo], blocklist_content: list[Pattern]
 ) -> tuple[BaseAlgo, Time]:
-    """
-    Create an instance of a given algorithm.
-    """
+    """Create an instance of a given algorithm."""
     time_start = time.time()
     instance = algo(blocklist_content)
     time_end = time.time()
@@ -70,9 +64,7 @@ def _create_instance(
 def _match_with_instance(
     instance: BaseAlgo, text: TargetText
 ) -> tuple[MatchResult, Time]:
-    """
-    Match a given test case with a given instance of an algorithm.
-    """
+    """Match a given test case with a given instance of an algorithm."""
     time_start = time.time()
     res = instance.match(text)
     time_end = time.time()
@@ -86,9 +78,7 @@ def test_algo(
     create_instance: Callable[[type[BaseAlgo], list[Pattern]], tuple[BaseAlgo, Time]],
     match_with_instance: Callable[[BaseAlgo, TargetText], tuple[MatchResult, Time]],
 ) -> RunResult:
-    """
-    Test a given algorithm with a given blocklist and tests.
-    """
+    """Test a given algorithm with a given blocklist and tests."""
 
     logging.info("Testing blocklist of size %s", blocklist_info[0])
 
@@ -115,9 +105,7 @@ def test_algo(
 
 
 def run_tests() -> None:
-    """
-    Main function for running the tests.
-    """
+    """Main function for running the tests."""
 
     tests = TestsInfo()
     for test_name in TEST_NAMES:
@@ -134,9 +122,7 @@ def run_tests() -> None:
         R = TypeVar("R")
 
         def prof(func: Callable[P, R]) -> Callable[P, R]:
-            """
-            Decorator for profiling a function.
-            """
+            """Decorator for profiling a function."""
             return cast(Callable[P, R], profile(func, stream=res_file, precision=4))
 
         create_instance = prof(_create_instance)
