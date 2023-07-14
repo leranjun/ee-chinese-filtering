@@ -7,8 +7,7 @@ import time
 from dataclasses import dataclass
 from typing import Callable, cast
 
-from src import (AC, WM, BaseAlgo, BruteForce, MatchResult, Native, Pattern,
-                 TargetText)
+from src import AC, WM, BaseAlgo, BruteForce, MatchResult, Native, Pattern, TargetText
 from src.profile import MemMeasure, profile
 
 logging.basicConfig(
@@ -178,7 +177,9 @@ def run_tests() -> None:
             for algo in [BruteForce, Native, AC, WM]:
                 # for algo in [AC]:
                 create_instance = profile(_create_instance, backend="psutil_uss")
-                match_with_instance = profile(_match_with_instance, backend="psutil_uss")
+                match_with_instance = profile(
+                    _match_with_instance, backend="psutil_uss"
+                )
 
                 res = test_algo(
                     algo,
