@@ -1,23 +1,21 @@
 """Algorithm using Python's built-in string search."""
 
-from chinese_filter._common import BaseAlgo, MatchResult, Pattern, TargetText
+from typing import Any
+
+from . import BaseAlgo, MatchResult, Pattern, TargetText
 
 
 class Native(BaseAlgo):
     """Algorithm using Python's built-in string search."""
 
-    NAME = "Native"
-
-    def __init__(self, patterns: list[Pattern]):
+    def __init__(self, patterns: list[Pattern], *args: Any, **kwargs: Any) -> None:
         """Create a new instance of the native algorithm."""
+        super().__init__(patterns, *args, **kwargs)
+
         self.patterns = patterns
 
-    def match(self, text: TargetText) -> MatchResult:
+    def _match(self, text: TargetText) -> MatchResult:
         """Match a string against the blocklist."""
-        check = super().match(text)
-        if len(check) > 0:
-            return MatchResult()
-
         matches = MatchResult()
         for pattern in self.patterns:
             idx = 0

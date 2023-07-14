@@ -1,14 +1,9 @@
 """This module implements the Wu-Manber algorithm for multi-pattern string matching in Chinese."""
 
 import logging
+from typing import Any
 
-from chinese_filter._common import (
-    BaseAlgo,
-    MatchResult,
-    Pattern,
-    TargetText,
-    byte_pos_to_char_pos,
-)
+from . import BaseAlgo, MatchResult, Pattern, TargetText, byte_pos_to_char_pos
 
 Block = bytes
 
@@ -16,11 +11,13 @@ Block = bytes
 class WM(BaseAlgo):
     """The Wu-Manber algorithm."""
 
-    NAME = "WM"
+    MANUAL_INSERT = True
 
-    def __init__(self, patterns: list[Pattern], block_size: int = 2) -> None:
+    def __init__(
+        self, patterns: list[Pattern], block_size: int = 2, *args: Any, **kwargs: Any
+    ) -> None:
         """Initialise the algorithm with a list of patterns."""
-        super().__init__(patterns)
+        super().__init__(patterns, *args, **kwargs)
 
         # The size of each block (B in the paper)
         self.block_size = block_size
@@ -88,20 +85,18 @@ class WM(BaseAlgo):
         logging.debug("Prefix key: %s", prefix_key)
         self.prefix.setdefault(prefix_key, set()).add(pattern)
 
+        self._insert_pinyin(pattern)
+
     def dump(self) -> None:
         """Dump the internal data structures."""
-        logging.debug("Dumping WM instance")
+        super().dump()
 
         logging.debug("Shift table: %s", self.shift)
         logging.debug("Hash table: %s", self.hash)
         logging.debug("Prefix table: %s", self.prefix)
 
-    def match(self, text: TargetText) -> MatchResult:
+    def _match(self, text: TargetText) -> MatchResult:
         """Match the patterns in the text."""
-        check = super().match(text)
-        if len(check) > 0:
-            return MatchResult()
-
         text_bytes = text.encode("utf-8")
         matches = MatchResult()
 
