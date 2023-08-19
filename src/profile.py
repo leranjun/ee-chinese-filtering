@@ -65,9 +65,7 @@ def profile(
     precision: int = 1,
     backend: BackendOptions = "psutil",
 ) -> ProfiledCallable[P, R] | Callable[[Callable[P, R]], ProfiledCallable[P, R]]:
-    """
-    Decorator that will run the function and print a line-by-line profile
-    """
+    """Decorator that will run the function and print a line-by-line profile"""
     backend = cast(BackendOptions, choose_backend(backend))
     if backend == "tracemalloc" and HAS_TRACEMALLOC:
         if not tracemalloc.is_tracing():
