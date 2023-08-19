@@ -165,7 +165,6 @@ class BaseAlgo:
 
     def preprocess(self, text: TargetText) -> list[str]:
         """Preprocess the text before matching."""
-
         if not isinstance(text, TargetText):
             raise TypeError("text must be a string")
 
