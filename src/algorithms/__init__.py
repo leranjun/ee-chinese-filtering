@@ -237,7 +237,6 @@ class BaseAlgo:
 
     def match(self, original: TargetText) -> list[MatchResult]:
         """Match a string against the blocklist."""
-
         res: list[MatchResult] = []
         for text in self.preprocess(original):
             res.append(self._match(text))

@@ -39,7 +39,6 @@ class WM(BaseAlgo):
 
     def insert(self, pattern: Pattern) -> None:
         """Insert a pattern into the instance."""
-
         # Encode the pattern to bytes
         pattern_bytes = pattern.encode("utf-8")
 
