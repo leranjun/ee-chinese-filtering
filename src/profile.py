@@ -67,11 +67,7 @@ def profile(
 ) -> ProfiledCallable[P, R] | Callable[[Callable[P, R]], ProfiledCallable[P, R]]:
     """Decorator that will run the function and print a line-by-line profile"""
     backend = cast(BackendOptions, choose_backend(backend))
-    if (
-        backend == "tracemalloc"
-        and HAS_TRACEMALLOC
-        and not tracemalloc.is_tracing()
-    ):
+    if backend == "tracemalloc" and HAS_TRACEMALLOC and not tracemalloc.is_tracing():
         tracemalloc.start()
 
     if func is not None:
