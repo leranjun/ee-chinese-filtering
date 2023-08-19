@@ -44,7 +44,6 @@ class AC(BaseAlgo):
 
         cur_idx: NodeIndex = 0
         for byte in pattern.encode("utf-8"):
-
             # Get the current node
             cur_node = self.nodes[cur_idx]
 
@@ -80,7 +79,6 @@ class AC(BaseAlgo):
                 if child == -1:
                     # This child node does not exist
                     continue
-
 
                 # Recursively traverse up the fail pointers until
                 # we find a node that has a child node with this byte
@@ -138,7 +136,6 @@ class AC(BaseAlgo):
 
         text_bytes = text.encode("utf-8")
         for pos, byte in enumerate(text_bytes):
-
             # Recursively match the text using fail pointers
             # unless the current node is the root node
             while cur_idx != 0 and self.nodes[cur_idx].children.get(byte, -1) == -1:
