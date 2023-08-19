@@ -182,7 +182,7 @@ class BaseAlgo:
 
         if self.ENABLE_RADICAL and len(self.radical_map) > 0:
             unique_radicals = "".join(
-                set(char for key in self.radical_map for char in key)
+                {char for key in self.radical_map for char in key}
             )
 
             # Replace any potential radicals in TargetText
