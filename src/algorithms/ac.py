@@ -41,7 +41,6 @@ class AC(BaseAlgo):
 
     def insert(self, pattern: Pattern) -> None:
         """Insert a key into the trie."""
-
         cur_idx: NodeIndex = 0
         for byte in pattern.encode("utf-8"):
             # Get the current node
@@ -69,7 +68,6 @@ class AC(BaseAlgo):
 
     def calculate_fail(self) -> None:
         """Calculate the fail pointers using BFS."""
-
         queue = [0]
         while queue:
             parent = queue.pop(0)
