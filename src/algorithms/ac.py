@@ -1,6 +1,5 @@
 """This module implements an Aho-Corasick automaton for multi-pattern string matching in Chinese."""
 
-import logging
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -42,46 +41,47 @@ class AC(BaseAlgo):
 
     def insert(self, pattern: Pattern) -> None:
         """Insert a key into the trie."""
-        logging.debug("Inserting pattern: %s", pattern)
+        # logging.debug("Inserting pattern: %s", pattern)
 
         cur_idx: NodeIndex = 0
         for byte in pattern.encode("utf-8"):
-            logging.debug("Byte %d (%s)", byte, chr(byte))
+            # logging.debug("Byte %d (%s)", byte, chr(byte))
 
             # Get the current node
             cur_node = self.nodes[cur_idx]
-            logging.debug("Current node: %d - %s", cur_idx, cur_node)
+            # logging.debug("Current node: %d - %s", cur_idx, cur_node)
 
             # If the child node with this byte does not exist, create one
             if cur_node.children.get(byte, -1) == -1:
-                logging.debug("Creating child node")
+                # logging.debug("Creating child node")
                 # Create a new node
                 new_node = ACNode()
                 # Append it to the list of nodes
                 self.nodes.append(new_node)
                 # Update the index of the child node with this byte
                 cur_node.children[byte] = len(self.nodes) - 1
-                logging.debug("Updated current node: %s", cur_node)
+                # logging.debug("Updated current node: %s", cur_node)
 
             # Move to the next node
             cur_idx = cur_node.children[byte]
-            logging.debug("Child node: %d - %s", cur_idx, self.nodes[cur_idx])
+            # logging.debug("Child node: %d - %s", cur_idx, self.nodes[cur_idx])
 
         # cur_idx is now the last node, record the pattern here
         last_node = self.nodes[cur_idx]
         last_node.patterns.append(pattern)
 
         self._insert_pinyin(pattern)
-        logging.debug("Finished insertion at node: %s", last_node)
+        self._insert_radical(pattern)
+        # logging.debug("Finished insertion at node: %s", last_node)
 
     def calculate_fail(self) -> None:
         """Calculate the fail pointers using BFS."""
-        logging.debug("Calculating fail pointers")
+        # logging.debug("Calculating fail pointers")
 
         queue = [0]
         while queue:
             parent = queue.pop(0)
-            logging.debug("Parent node: %d - %s", parent, self.nodes[parent])
+            # logging.debug("Parent node: %d - %s", parent, self.nodes[parent])
 
             # For each child node of the current parent node
             for byte, child in self.nodes[parent].children.items():
@@ -89,7 +89,7 @@ class AC(BaseAlgo):
                     # This child node does not exist
                     continue
 
-                logging.debug("Byte %d (%s)", byte, chr(byte))
+                # logging.debug("Byte %d (%s)", byte, chr(byte))
 
                 # Recursively traverse up the fail pointers until
                 # we find a node that has a child node with this byte
@@ -108,25 +108,25 @@ class AC(BaseAlgo):
 
                 if anc_fail == -1:
                     # No possible fail node, set the fail pointer to the root
-                    logging.debug("Fail node not found")
+                    # logging.debug("Fail node not found")
                     self.fail[child] = 0
                 else:
                     # Fail node found
                     anc_fail_node = self.nodes[anc_fail]
-                    logging.debug(
-                        "Ancestor fail node: %d - %s",
-                        anc_fail,
-                        anc_fail_node,
-                    )
+                    # logging.debug(
+                    #     "Ancestor fail node: %d - %s",
+                    #     anc_fail,
+                    #     anc_fail_node,
+                    # )
 
                     # Get the actual fail node from the ancestor fail node
                     cur_fail = anc_fail_node.children[byte]
                     cur_fail_node = self.nodes[cur_fail]
-                    logging.debug(
-                        "Current fail pointer: %d - %s",
-                        cur_fail,
-                        cur_fail_node,
-                    )
+                    # logging.debug(
+                    #     "Current fail pointer: %d - %s",
+                    #     cur_fail,
+                    #     cur_fail_node,
+                    # )
 
                     # Set the fail pointer
                     self.fail[child] = cur_fail
@@ -139,13 +139,14 @@ class AC(BaseAlgo):
         # Set the fail pointer of the root node to itself
         self.fail[0] = 0
 
-    def dump(self) -> None:
+    def dump(self) -> list[str]:
         """Dump the nodes and fail pointers of the automaton."""
         super().dump()
 
-        logging.debug("Dumping automaton")
-        for idx, node in enumerate(self.nodes):
-            logging.debug("Node %d: %s, fail: %d", idx, node, self.fail.get(idx, -1))
+        return [
+            f"Node {idx}: {node}, fail: {self.fail.get(idx, -1)}"
+            for idx, node in enumerate(self.nodes)
+        ]
 
     def _match(self, text: TargetText) -> MatchResult:
         """Match the text with the patterns."""
@@ -156,7 +157,7 @@ class AC(BaseAlgo):
 
         text_bytes = text.encode("utf-8")
         for pos, byte in enumerate(text_bytes):
-            logging.debug("Byte %d (%s)", byte, chr(byte))
+            # logging.debug("Byte %d (%s)", byte, chr(byte))
 
             # Recursively match the text using fail pointers
             # unless the current node is the root node
@@ -166,7 +167,7 @@ class AC(BaseAlgo):
                 cur_idx = self.fail.get(cur_idx, -1)
 
             cur_node = self.nodes[cur_idx]
-            logging.debug("Current node: %d - %s", cur_idx, cur_node)
+            # logging.debug("Current node: %d - %s", cur_idx, cur_node)
 
             if cur_node.children.get(byte, -1) != -1:
                 # There is a child node with this byte
@@ -175,18 +176,18 @@ class AC(BaseAlgo):
 
                 if child_node.patterns:
                     # There is a pattern ending at this node, record the match
-                    logging.debug(
-                        "Match: ending at position %d, patterns %s",
-                        pos,
-                        child_node.patterns,
-                    )
+                    # logging.debug(
+                    #     "Match: ending at position %d, patterns %s",
+                    #     pos,
+                    #     child_node.patterns,
+                    # )
                     for pattern in child_node.patterns:
                         char_pos = byte_pos_to_char_pos(
                             pos, text_bytes, pattern.encode("utf-8")
                         )
-                        logging.debug(
-                            "Submatch: %s (char position %d)", pattern, char_pos
-                        )
+                        # logging.debug(
+                        #     "Submatch: %s (char position %d)", pattern, char_pos
+                        # )
                         matches.append(
                             (
                                 char_pos,
@@ -196,9 +197,11 @@ class AC(BaseAlgo):
                 else:
                     # There is no pattern ending at this node, but there may be
                     # patterns ending at the next ones
-                    logging.debug("Pattern may match, continue")
+                    # logging.debug("Pattern may match, continue")
+                    pass
 
             else:
-                logging.debug("No next node to traverse, continue")
+                # logging.debug("No next node to traverse, continue")
+                pass
 
         return matches

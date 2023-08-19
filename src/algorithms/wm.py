@@ -1,6 +1,5 @@
 """This module implements the Wu-Manber algorithm for multi-pattern string matching in Chinese."""
 
-import logging
 from typing import Any
 
 from . import BaseAlgo, MatchResult, Pattern, TargetText, byte_pos_to_char_pos
@@ -14,7 +13,7 @@ class WM(BaseAlgo):
     MANUAL_INSERT = True
 
     def __init__(
-        self, patterns: list[Pattern], block_size: int = 2, *args: Any, **kwargs: Any
+        self, patterns: list[Pattern], *args: Any, block_size: int = 2, **kwargs: Any
     ) -> None:
         """Initialise the algorithm with a list of patterns."""
         super().__init__(patterns, *args, **kwargs)
@@ -40,7 +39,7 @@ class WM(BaseAlgo):
 
     def insert(self, pattern: Pattern) -> None:
         """Insert a pattern into the instance."""
-        logging.debug("Inserting pattern: %s", pattern)
+        # logging.debug("Inserting pattern: %s", pattern)
 
         # Encode the pattern to bytes
         pattern_bytes = pattern.encode("utf-8")
@@ -56,14 +55,14 @@ class WM(BaseAlgo):
         # shift["de"] = 0
         for i in range(self.min_ptn_len - self.block_size + 1):
             block = pattern_bytes[i : i + self.block_size]
-            logging.debug("Inserting block: %s", block)
+            # logging.debug("Inserting block: %s", block)
             # When a block is already in the shift table, we keep the
             # smaller value
             self.shift[block] = min(
                 self.shift.get(block, self.min_ptn_len),
                 self.min_ptn_len - i - self.block_size,
             )
-            logging.debug("New shift value: %s", self.shift[block])
+            # logging.debug("New shift value: %s", self.shift[block])
 
         # Insert the pattern to the hash table where the key is the
         # last BLOCK_SIZE characters of the first min_ptn_len characters
@@ -74,7 +73,7 @@ class WM(BaseAlgo):
         suffix_key = pattern_bytes[
             self.min_ptn_len - self.block_size : self.min_ptn_len
         ]
-        logging.debug("Suffix key: %s", suffix_key)
+        # logging.debug("Suffix key: %s", suffix_key)
         self.hash.setdefault(suffix_key, set()).add(pattern)
 
         # Insert the pattern to the prefix table where the key is the
@@ -82,18 +81,21 @@ class WM(BaseAlgo):
         # e.g. for BLOCK_SIZE = 2, pattern = "abcde", "abcc" and "abcd", we store
         # prefix["ab"] = ["abcde", "abcc", "abcd"]
         prefix_key = pattern_bytes[: self.block_size]
-        logging.debug("Prefix key: %s", prefix_key)
+        # logging.debug("Prefix key: %s", prefix_key)
         self.prefix.setdefault(prefix_key, set()).add(pattern)
 
         self._insert_pinyin(pattern)
+        self._insert_radical(pattern)
 
-    def dump(self) -> None:
+    def dump(self) -> list[str]:
         """Dump the internal data structures."""
         super().dump()
 
-        logging.debug("Shift table: %s", self.shift)
-        logging.debug("Hash table: %s", self.hash)
-        logging.debug("Prefix table: %s", self.prefix)
+        return [
+            f"Shift table: {self.shift}",
+            f"Hash table: {self.hash}",
+            f"Prefix table: {self.prefix}",
+        ]
 
     def _match(self, text: TargetText) -> MatchResult:
         """Match the patterns in the text."""
@@ -104,13 +106,13 @@ class WM(BaseAlgo):
         while end_pos < len(text_bytes):
             # Get the current block
             end_block = text_bytes[end_pos - self.block_size + 1 : end_pos + 1]
-            logging.debug("Ending block: %s", end_block)
+            # logging.debug("Ending block: %s", end_block)
 
             shift_val = self.shift.get(
                 end_block,
                 self.min_ptn_len - self.block_size + 1,
             )
-            logging.debug("Shift value: %s", shift_val)
+            # logging.debug("Shift value: %s", shift_val)
             if shift_val != 0:
                 end_pos += shift_val
                 continue
@@ -118,16 +120,16 @@ class WM(BaseAlgo):
             # Cross-check the hash table and the prefix table based on the current block
             start_pos = end_pos - self.min_ptn_len + 1
             start_block = text_bytes[start_pos : start_pos + self.block_size]
-            logging.debug("Starting block: %s", start_block)
+            # logging.debug("Starting block: %s", start_block)
             potential_matches = self.hash.get(end_block, set()) & self.prefix.get(
                 start_block, set()
             )
-            logging.debug("Potential matches: %s", potential_matches)
+            # logging.debug("Potential matches: %s", potential_matches)
             for pattern in potential_matches:
                 pattern_bytes = pattern.encode("utf-8")
                 target_bytes = text_bytes[start_pos : start_pos + len(pattern_bytes)]
                 if target_bytes == pattern_bytes:
-                    logging.debug("Matched pattern: %s", pattern)
+                    # logging.debug("Matched pattern: %s", pattern)
                     matches.append(
                         (
                             byte_pos_to_char_pos(
@@ -139,11 +141,12 @@ class WM(BaseAlgo):
                         )
                     )
                 else:
-                    logging.debug(
-                        "False positive: expected %s, got %s",
-                        pattern_bytes,
-                        target_bytes,
-                    )
+                    # logging.debug(
+                    #     "False positive: expected %s, got %s",
+                    #     pattern_bytes,
+                    #     target_bytes,
+                    # )
+                    pass
 
             end_pos += 1
 
