@@ -184,22 +184,18 @@ class BaseAlgo:
             unique_radicals = "".join(
                 set(char for key in self.radical_map for char in key)
             )
-            # logging.debug("Unique radicals: %s", unique_radicals)
 
             # Replace any potential radicals in TargetText
             potential_radicals: set[Radical] = set(
                 re.findall(rf"[{unique_radicals}]{{2,}}", text)
             )
-            # logging.debug("Potential radicals: %s", potential_radicals)
             for radical_group in potential_radicals:
                 radical_combinations = get_combinations_from_sequence(radical_group, 2)
-                # logging.debug("Radical combinations: %s", radical_combinations)
                 for r_combination in radical_combinations:
                     if r_combination not in self.radical_map:
                         continue
 
                     potential_chars = self.radical_map[r_combination]
-                    # logging.debug("Radical hit: %s %s", r_combination, potential_chars)
                     res.extend(
                         [
                             text.replace(r_combination, character)
@@ -210,27 +206,19 @@ class BaseAlgo:
         if self.ENABLE_PINYIN and len(self.pinyin_map) > 0:
             # Recognise any potential pinyin in TargetText
             potential_pinyin: list[str] = re.findall(r"(?:[a-z]+ ?)+", text)
-            # logging.debug("Potential pinyin: %s", potential_pinyin)
             for pinyin_group in potential_pinyin:
                 pinyin_list = tokenize(pinyin_group)[0]
                 pinyin_list_stripped = tokenize("".join(pinyin_group.split()))[0]
-                # logging.debug("Pinyin list: %s", pinyin_list)
 
                 pinyin_combinations = get_combinations_from_sequence(
                     pinyin_list
                 ) + get_combinations_from_sequence(pinyin_list_stripped)
-                # logging.debug("Pinyin combinations: %s", pinyin_combinations)
                 for _combination in pinyin_combinations:
                     p_combination = tuple(_combination)
                     if p_combination not in self.pinyin_map:
                         continue
 
                     potential_chars = self.pinyin_map[p_combination]
-                    # logging.debug(
-                    #     "Pinyin hit: %s %s",
-                    #     p_combination,
-                    #     potential_chars,
-                    # )
                     res.extend(
                         [
                             re.sub(
@@ -250,7 +238,6 @@ class BaseAlgo:
 
     def match(self, original: TargetText) -> list[MatchResult]:
         """Match a string against the blocklist."""
-        # logging.debug("Matching text: %s", original)
 
         res: list[MatchResult] = []
         for text in self.preprocess(original):
