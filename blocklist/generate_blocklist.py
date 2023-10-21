@@ -6,12 +6,10 @@ import random
 # set the seed for the random number generator
 random.seed(256)
 
-NO_INCLUDE = ["文凭", "独立", "领导", "社会"]
+NO_INCLUDE = ["文凭", "独立", "社会", "管理", "米青", "cs", "g m"]
 
 blocklist_10 = sorted(
     [
-        "新加坡",
-        "世界联合书院",
         "国际文凭",
         "国际文凭组织",
         "国际文凭课程",
@@ -20,6 +18,8 @@ blocklist_10 = sorted(
         "国际文凭大学预科",
         "国际文凭大学预科课程",
         "拓展论文",
+        "学术研究",
+        "学术论文",
     ]
 )
 
@@ -39,7 +39,9 @@ for filename in glob.glob("raw/*.txt"):
                     + "".join(chr(i) for i in range(0, 32))
                     + "".join(chr(i) for i in range(127, 256)),
                 )
-            ).strip()
+            )
+            .strip()
+            .lower()
             for line in f.read().splitlines()
         ]
         blocklist_set.update(line for line in lines if line and len(line) > 1)
